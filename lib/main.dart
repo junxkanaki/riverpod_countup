@@ -19,26 +19,28 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: MyHomePage(ViewModel()),
     );
   }
 }
 
 class MyHomePage extends ConsumerStatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  final ViewModel viewModel;
+  const MyHomePage(this.viewModel, {Key? key}) : super(key: key);
 
   @override
   ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
-  ViewModel _viewModel = ViewModel();
+  late ViewModel _viewModel;
 
   // initState()はConsumerやConsumerWidgetでは使用不可のためrefを渡す際は不便
   // ConsumerStatefulWidgetはinitState()を使用できるので最初にrefを渡すことができる
   @override
   void initState() {
     super.initState();
+    _viewModel = widget.viewModel;
     // refはConsumerStateに含まれている。
     _viewModel.setRef(ref);
   }
