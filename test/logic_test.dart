@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
 // テスト対象をimportする
-import 'package:riverpod_countup/logic.dart';
+import 'package:riverpod_countup/logic/logic.dart';
 
 void main() {
   Logic target = Logic();
