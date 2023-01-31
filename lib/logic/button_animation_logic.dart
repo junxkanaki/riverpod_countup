@@ -12,9 +12,11 @@ class ButtonAnimationLogic with CountDataChangedNotifier {
   late Animation<double> _animationScale;
   // アニメーションの回転を管理
   late Animation<double> _animationRotation;
+  late AnimationCombination _animationCombination;
 
   get animationScale => _animationScale;
   get animationRotation => _animationRotation;
+  get animationCombination => _animationCombination;
 
   ValueChangedCondition startCondition;
 
@@ -36,6 +38,8 @@ class ButtonAnimationLogic with CountDataChangedNotifier {
             CurveTween(curve: Interval(0.4, 0.8, curve: ButtonRotateCurve())))
         // 2倍の大きさになってアニメーションが終了する
         .drive(Tween(begin: 0.0, end: 1.0));
+    _animationCombination =
+        AnimationCombination(_animationScale, _animationRotation);
   }
 
   /// インスタンスが消える際に実行される
@@ -63,9 +67,20 @@ class ButtonAnimationLogic with CountDataChangedNotifier {
   }
 }
 
+// 回転アニメーションの調整をするクラス
 class ButtonRotateCurve extends Curve {
   @override
   double transform(double t) {
     return math.sin(2 * math.pi * t) / 16;
   }
+}
+
+// スケールと回転のアニメーションを管理する。新しくアニメーションを追加したい場合は新たに変数と引数を加える。
+class AnimationCombination {
+  // アニメーションのスケールを管理
+  final Animation<double> animationScale;
+  // アニメーションの回転を管理
+  final Animation<double> animationRotation;
+
+  AnimationCombination(this.animationScale, this.animationRotation);
 }
