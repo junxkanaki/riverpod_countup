@@ -12,7 +12,7 @@ class Logic {
 
   void decrease() {
     _countData = _countData.copyWith(
-        count: _countData.count - 1, countUp: _countData.countDown + 1);
+        count: _countData.count - 1, countDown: _countData.countDown + 1);
   }
 
   void reset() {
