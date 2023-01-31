@@ -67,6 +67,7 @@ class ViewModel {
 
   // 現在のアニメーションの倍率を取得
   get animationPlus => _buttonAnimationLogicPlus.animationScale;
+  get animationPlusRotation => _buttonAnimationLogicPlus.animationRotation;
   get animationMinus => _buttonAnimationLogicMinus.animationScale;
   get animationReset => _buttonAnimationLogicReset.animationScale;
 
