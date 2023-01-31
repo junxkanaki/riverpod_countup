@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_countup/data/count_data.dart';
+import 'package:riverpod_countup/logic/button_animation_logic.dart';
 import 'package:riverpod_countup/logic/logic.dart';
 import 'package:riverpod_countup/provider.dart';
 
@@ -10,13 +12,20 @@ class ViewModel {
   Logic _logic = Logic();
 
   SoundLogic _soundLogic = SoundLogic();
+
+  // ViewのStatefulWidgetの値を渡すことで初期化可能なのでlate
+  late ButtonAnimationLogic _buttonAnimationLogicPlus;
+
   // Riverpodにアクセスできる。外部から参照しないのでプライベート。
   late WidgetRef _ref;
+
   // setRefで外から渡す。
-  void setRef(WidgetRef ref) {
+  void setRef(WidgetRef ref, TickerProvider tickerProvider) {
     this._ref = ref;
+
     // 音声ファイルをキャッシュに入れる
     _soundLogic.load();
+    _buttonAnimationLogicPlus = ButtonAnimationLogic(tickerProvider);
   }
 
   get count => _ref.watch(countDataProvider).count.toString();
@@ -26,8 +35,12 @@ class ViewModel {
       .watch(countDataProvider.select((value) => value.countDown))
       .toString();
 
+  // 現在のアニメーションの倍率を取得
+  get animationPlus => _buttonAnimationLogicPlus.animationScale;
+
   void onIncrease() {
     _logic.increase();
+    _buttonAnimationLogicPlus.start();
     update();
   }
 

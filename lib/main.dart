@@ -32,7 +32,9 @@ class MyHomePage extends ConsumerStatefulWidget {
   ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends ConsumerState<MyHomePage> {
+// TickerProviderStateMixinはアニメーションを使用する宣言
+class _MyHomePageState extends ConsumerState<MyHomePage>
+    with TickerProviderStateMixin {
   late ViewModel _viewModel;
 
   // initState()はConsumerやConsumerWidgetでは使用不可のためrefを渡す際は不便
@@ -42,7 +44,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     super.initState();
     _viewModel = widget.viewModel;
     // refはConsumerStateに含まれている。
-    _viewModel.setRef(ref);
+    _viewModel.setRef(ref, this);
   }
 
   @override
@@ -68,7 +70,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   onPressed: () {
                     _viewModel.onIncrease();
                   },
-                  child: const Icon(CupertinoIcons.plus),
+                  child: ScaleTransition(
+                    scale: _viewModel.animationPlus,
+                    child: const Icon(CupertinoIcons.plus),
+                  ),
                 ),
                 FloatingActionButton(
                   onPressed: () {
