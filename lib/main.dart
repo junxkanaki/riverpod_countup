@@ -79,7 +79,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
                   onPressed: () {
                     _viewModel.onDecrease();
                   },
-                  child: const Icon(CupertinoIcons.minus),
+                  child: ScaleTransition(
+                    scale: _viewModel.animationMinus,
+                    child: const Icon(CupertinoIcons.minus),
+                  ),
                 )
               ],
             ),
@@ -97,8 +100,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage>
         onPressed: () {
           _viewModel.onReset();
         },
-        tooltip: 'Increment',
-        child: const Icon(Icons.refresh),
+        child: ScaleTransition(
+          scale: _viewModel.animationReset,
+          child: const Icon(CupertinoIcons.refresh),
+        ),
       ),
     );
   }

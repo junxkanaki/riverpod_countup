@@ -16,6 +16,8 @@ class ViewModel {
 
   // ViewのStatefulWidgetの値を渡すことで初期化可能なのでlate
   late ButtonAnimationLogic _buttonAnimationLogicPlus;
+  late ButtonAnimationLogic _buttonAnimationLogicMinus;
+  late ButtonAnimationLogic _buttonAnimationLogicReset;
 
   // Riverpodにアクセスできる。外部から参照しないのでプライベート。
   late WidgetRef _ref;
@@ -26,11 +28,34 @@ class ViewModel {
   void setRef(WidgetRef ref, TickerProvider tickerProvider) {
     this._ref = ref;
 
+    // インスタンス作成時に条件分岐する
+    // ①外で宣言する方法
+    ValueChangedCondition conditionPlus =
+        (CountData oldValue, CountData newValue) {
+      return oldValue.countUp + 1 == newValue.countUp;
+    };
+    _buttonAnimationLogicPlus =
+        ButtonAnimationLogic(tickerProvider, conditionPlus);
+    // ②引数内に直接関数を渡す方法
+    _buttonAnimationLogicMinus = ButtonAnimationLogic(tickerProvider,
+        (CountData oldValue, CountData newValue) {
+      return oldValue.countDown + 1 == newValue.countDown;
+    });
+    // ③アロー関数で引数内に直接渡す方法
+    _buttonAnimationLogicReset = ButtonAnimationLogic(
+        tickerProvider,
+        (oldValue, newValue) =>
+            newValue.countUp == 0 && newValue.countDown == 0);
+
+    notifiers = [
+      _soundLogic,
+      _buttonAnimationLogicPlus,
+      _buttonAnimationLogicMinus,
+      _buttonAnimationLogicReset
+    ];
+
     // 音声ファイルをキャッシュに入れる
     _soundLogic.load();
-    _buttonAnimationLogicPlus = ButtonAnimationLogic(tickerProvider);
-
-    notifiers = [_soundLogic, _buttonAnimationLogicPlus];
   }
 
   get count => _ref.watch(countDataProvider).count.toString();
@@ -42,6 +67,8 @@ class ViewModel {
 
   // 現在のアニメーションの倍率を取得
   get animationPlus => _buttonAnimationLogicPlus.animationScale;
+  get animationMinus => _buttonAnimationLogicMinus.animationScale;
+  get animationReset => _buttonAnimationLogicReset.animationScale;
 
   void onIncrease() {
     _logic.increase();

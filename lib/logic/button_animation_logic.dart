@@ -12,9 +12,11 @@ class ButtonAnimationLogic with CountDataChangedNotifier {
 
   get animationScale => _animationScale;
 
+  ValueChangedCondition startCondition;
+
   /// コンストラクタ。インスタンス生成時に実行。
   /// どのWidgetに対してアニメーションを行うか引数で渡す。StatefulWidgetを渡す。
-  ButtonAnimationLogic(TickerProvider tickerProvider) {
+  ButtonAnimationLogic(TickerProvider tickerProvider, this.startCondition) {
     _animationController = AnimationController(
         // アニメーションの期間
         vsync: tickerProvider,
@@ -43,10 +45,12 @@ class ButtonAnimationLogic with CountDataChangedNotifier {
 
   // @overrideで親クラスにあることを示す
   @override
-  void valueChanged(CountData oldData, CountData newData) {
-    if (oldData.countUp + 1 != newData.countUp) {
-      return;
+  void valueChanged(CountData oldValue, CountData newValue) {
+    // oldValueとnewValueを渡してtrueだった場合は実行
+    if (startCondition(oldValue, newValue)) {
+      start();
     }
-    start();
   }
 }
+
+// インスタンスごとに分岐条件をつける
