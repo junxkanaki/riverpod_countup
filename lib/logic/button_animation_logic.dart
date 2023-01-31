@@ -1,9 +1,10 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_countup/logic/count_data_changed_notifier.dart';
 
 import '../data/count_data.dart';
 
-class ButtonAnimationLogic {
+class ButtonAnimationLogic with CountDataChangedNotifier {
   // アニメーションの開始終了などを管理
   late AnimationController _animationController;
   // アニメーションのスケールを管理
@@ -40,6 +41,8 @@ class ButtonAnimationLogic {
         .whenComplete(() => _animationController.reset());
   }
 
+  // @overrideで親クラスにあることを示す
+  @override
   void valueChanged(CountData oldData, CountData newData) {
     if (oldData.countUp + 1 != newData.countUp) {
       return;
