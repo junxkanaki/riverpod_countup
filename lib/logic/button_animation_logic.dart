@@ -1,6 +1,8 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/count_data.dart';
+
 class ButtonAnimationLogic {
   // アニメーションの開始終了などを管理
   late AnimationController _animationController;
@@ -36,5 +38,12 @@ class ButtonAnimationLogic {
     _animationController
         .forward()
         .whenComplete(() => _animationController.reset());
+  }
+
+  void valueChanged(CountData oldData, CountData newData) {
+    if (oldData.countUp + 1 != newData.countUp) {
+      return;
+    }
+    start();
   }
 }

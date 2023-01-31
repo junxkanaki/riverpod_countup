@@ -13,9 +13,7 @@ class SoundLogic {
     _cache.loadAll([SOUND_DATA_UP, SOUND_DATA_DOWN, SOUND_DATA_RESET]);
   }
 
-  /**
-   * ViewModelではなくLogicの中で音の鳴る条件を管理する
-   */
+  /// sViewModelではなくLogicの中で音の鳴る条件を管理する
   void valueChanged(CountData oldData, CountData newData) {
     if (newData.countUp == 0 && newData.countDown == 0 && newData.count == 0) {
       playResetSound();
