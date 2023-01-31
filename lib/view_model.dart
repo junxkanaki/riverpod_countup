@@ -5,7 +5,9 @@ import 'package:riverpod_countup/data/count_data.dart';
 import 'package:riverpod_countup/logic/button_animation_logic.dart';
 import 'package:riverpod_countup/logic/count_data_changed_notifier.dart';
 import 'package:riverpod_countup/logic/logic.dart';
+import 'package:riverpod_countup/logic/shared_preferences_logic.dart';
 import 'package:riverpod_countup/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'logic/sound_logic.dart';
 
@@ -51,8 +53,15 @@ class ViewModel {
       _soundLogic,
       _buttonAnimationLogicPlus,
       _buttonAnimationLogicMinus,
-      _buttonAnimationLogicReset
+      _buttonAnimationLogicReset,
+      SharedPreferencesLogic(),
     ];
+
+    // SharedPreference内のデータを保存する
+    SharedPreferencesLogic.read().then((value) {
+      _logic.init(value);
+      update();
+    });
 
     // 音声ファイルをキャッシュに入れる
     _soundLogic.load();
@@ -66,16 +75,12 @@ class ViewModel {
       .toString();
 
   // 現在のアニメーションの倍率を取得
-  get animationPlusScale => _buttonAnimationLogicPlus.animationScale;
-  get animationPlusRotation => _buttonAnimationLogicPlus.animationRotation;
   get animationPlusCombination =>
       _buttonAnimationLogicPlus.animationCombination;
 
-  get animationMinus => _buttonAnimationLogicMinus.animationScale;
   get animationMinusCombination =>
       _buttonAnimationLogicMinus.animationCombination;
 
-  get animationReset => _buttonAnimationLogicReset.animationScale;
   get animationResetCombination =>
       _buttonAnimationLogicReset.animationCombination;
 

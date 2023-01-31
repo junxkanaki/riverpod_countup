@@ -18,4 +18,9 @@ class Logic {
   void reset() {
     _countData = const CountData(count: 0, countUp: 0, countDown: 0);
   }
+
+  // SharedPreferencesの値でLogicを初期化する
+  void init(CountData countData) {
+    _countData = countData;
+  }
 }
